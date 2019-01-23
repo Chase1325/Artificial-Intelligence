@@ -91,13 +91,34 @@ def hillClimbNoBacktrack():
 def beam():
     pass
 
+def searchHandle(Queue, searchMethod):
+    searchMethodSwitch = {
+        'Depth 1st Search': 0,
+        'Breadth 1st Search': 1,
+        'Depth-limited Search': 2,
+        'Iterative Deepening Search': 3,
+        'Uniform Cost Search': 4,
+        'Greedy Search': 5,
+        'A*': 6,
+        'Hill-climbing': 7,
+        'Beam Search': 8,
+    }
+
+    return searchMethodSwitch.get(searchMethod, 'Method non existent')
+
+def printRow(expanded, queue):
+    print("{:>15} {:>10}".format(expanded, queue))
+
 #General Search Procedure to be called
 #Input: Graph txt File
 def General_Search(graph, searchMethod):
     print("*" + searchMethod + ":\n")
+    printRow('Expanded', 'Queue')
     #q=[]
     #if q.isEmpty():
     #    pass
+    #searchHandle(q, searchMethod)
+
 
 if __name__== "__main__":
     parser = argparse.ArgumentParser(description='Perform Graph Searches')
