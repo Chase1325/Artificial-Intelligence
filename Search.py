@@ -1,5 +1,5 @@
 import argparse
-from queue import PriorityQueue
+import collections
 
 class Node:
     def __init__(self, node, weight=0):
@@ -112,8 +112,11 @@ def printRow(expanded, queue):
 #General Search Procedure to be called
 #Input: Graph txt File
 def General_Search(graph, searchMethod):
-    print("*" + searchMethod + ":\n")
+    print("*" + searchMethod + ":")
     printRow('Expanded', 'Queue')
+
+
+
     #q=[]
     #if q.isEmpty():
     #    pass
@@ -123,7 +126,7 @@ def General_Search(graph, searchMethod):
 if __name__== "__main__":
     parser = argparse.ArgumentParser(description='Perform Graph Searches')
     parser.add_argument('graphFile')
-    parser.add_argument('outputFile')
+    #parser.add_argument('outputFile')
     args = parser.parse_args()
 
     g = Graph()
