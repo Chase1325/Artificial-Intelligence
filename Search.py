@@ -1,6 +1,5 @@
 import argparse
 import collections
-import time
 
 class Node:
     def __init__(self, node, weight=0):
@@ -330,7 +329,6 @@ def BS(g, q, adj, pop):
                    i = 0
            q.remove(q[n])
 
-    time.sleep(1)
     return q
 
 def printRow(expanded, queue):
@@ -339,64 +337,94 @@ def printRow(expanded, queue):
 def printExpanded(expanded, queue):
     print("{:>11} {:>14}".format(expanded, queue))
 
+def printPopAndQueue(q, searchMethod, iter):
+
+    queue = ''
+    if(searchMethod == 'IDS'):
+        for i in q:
+            path = ''
+            for node in i:
+                path += (node + ',')
+            path = path[:-1]
+            queue += '<{}> '.format(path)
+        queue = queue[:-1]
+        if(q[0][0][0]=='S'):
+            print("\nL={} {:>7}          [{}]".format(iter-1, q[0][0][0], queue))
+        else:
+            print("{:>11}          [{}]".format(q[0][0][0], queue))
+
+    if(searchMethod in {'UCS','GS','ASS','HC','BS'}):
+        for i in q:
+            path = ''
+            #path += str(i[1])
+            for node in i[0]:
+                path += (node + ',')
+            path = path[:-1]
+            queue += '{}<{}> '.format(i[1],path)
+        queue = queue[:-1]
+
+        print("{:>11}          [{}]".format(q[0][0][0], queue))
+
+    if(searchMethod in {'DFS', 'BFS', 'DLS'}):
+       for i in q:
+           path = ''
+           for node in i:
+               path += (node + ',')
+           path = path[:-1]
+           queue += '<{}> '.format(path)
+       queue = queue[:-1]
+
+       print("{:>11}          [{}]".format(q[0][0][0], queue))
+
+
 #General Search Procedure to be called
 #Input: Graph txt File
 def General_Search(graph, searchMethod):
+
+    #Print Headers for Search Method type
     print("*" + searchMethod + ":")
     printRow('Expanded', 'Queue')
-    i=1
-    #Initialize the Queue
+
+    i=1 #Initialize an iteration variable (Put inside here so as to avoid globals)
+
+    #Initialize the Queue based on SearchMethod
     if(searchMethod == 'UCS'):
         node = [['S'], 0]
         q=collections.deque([node])
-        printExpanded('S', '[0<S>]')
-    elif(searchMethod == 'GS'):
+    elif(searchMethod in {'GS','ASS','HC','BS'}):
         node = [['S'], graph.getNode('S').getNodeWeight()]
         q=collections.deque([node])
-        printExpanded('S', "[{val}<S>]".format(val = node[1]))
-    elif(searchMethod == 'ASS'):
-        node = [['S'], graph.getNode('S').getNodeWeight()]
-        q=collections.deque([node])
-        printExpanded('S', "[{val}<S>]".format(val = node[1]))
-    elif(searchMethod == 'HC'):
-        node = [['S'], graph.getNode('S').getNodeWeight()]
-        q=collections.deque([node])
-        printExpanded('S', "[{val}<S>]".format(val = node[1]))
-    elif(searchMethod == 'BS'):
-        node = [['S'], graph.getNode('S').getNodeWeight()]
-        q=collections.deque([node])
-        printExpanded('S', "[{val}<S>]".format(val = node[1]))
-    elif(searchMethod == 'IDS'):
-        node = ['S']
-        q=collections.deque([node])
-        print("{} {:>7} {:>14}".format('L=0','S','[<S>]'))
     else:
         node = ['S']
         q=collections.deque([node])
-        printExpanded('S', '[<S>]')
 
-
+    #Begin General Searching Loop
     while True:
+
         #If Queue is empty, Return No solution
         if(len(q)==0):
+
+            #Reset the Queue if the searchMethod is IDS
             if(searchMethod=='IDS'):
                 node = ['S']
                 q=collections.deque([node])
-                print("{} {:>7} {:>14}".format('L=0','S','[<S>]'))
                 i+=1
             else:
                 print('Path not found :(\n')
                 break
-        #printSearch(e, q)
+
+        #Output the Node to be Popped and the Queue before Popping
+        printPopAndQueue(q, searchMethod, i)
+
         pop = q.popleft() #Pop From Queue
-        print(pop)
+
         #If Node is goal, return solution
         if(pop[0][0]=='G'):
             print('Goal reached!\n')
             return pop
             break
 
-        #Expand from the pop top node
+        #Expand from the pop top node based on Search Method Queue struct
         if(searchMethod == ('DFS' or 'BFS' or 'IDS')):
             adj = g.getNode(pop[0]).getAdjacent()
         else:
@@ -430,13 +458,9 @@ def General_Search(graph, searchMethod):
         if(searchMethod == 'BS'):
             q = BS(g, q, adj, pop)
 
-        print(q)
-
-
 if __name__== "__main__":
     parser = argparse.ArgumentParser(description='Perform Graph Searches')
     parser.add_argument('graphFile')
-    #parser.add_argument('outputFile')
     args = parser.parse_args()
 
     g = Graph()
@@ -456,11 +480,9 @@ if __name__== "__main__":
             if(node==False):
                 line = line.rstrip('n').split()
                 edgeInfo.append([line[0],line[1],float(line[2])])
-                #g.addEdge(line[0],line[1], float(line[2]))
             else:
                 line = line.rstrip('n').split()
                 nodeInfo.append([line[0], float(line[1])])
-                #g.addNode(line[0], float(line[1]))
     nodeInfo.append(['G', 0.0]) #Goalstate
 
     #Populate our graph with info
@@ -469,11 +491,11 @@ if __name__== "__main__":
     for edge in edgeInfo:
         g.addEdge(edge[0],edge[1],edge[2])
 
-    #print(g.getNode('A').getAdjacent())
     searchMethods = ['DFS', 'BFS',
                      'DLS', 'IDS',
                      'UCS', 'GS',
                      'ASS', 'HC', 'BS']
 
+    #Iterate and call all the search methods
     for searchMethod in searchMethods:
         General_Search(g, searchMethod)
