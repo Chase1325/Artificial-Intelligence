@@ -55,8 +55,6 @@ class Graph:
     def getAllEdges(self):
         return self.edges
 
-
-
 #Depth 1st Search
 def DFS(g, q, adj, pop):
     openedList = []
@@ -73,7 +71,6 @@ def DFS(g, q, adj, pop):
         item.extend(pop)
         q.extendleft([item])
     return q
-
 
 #Breadth 1st Search
 def BFS(g, q, adj, pop):
@@ -332,19 +329,6 @@ def BS(g, q, adj, pop):
                    n+=1
                    i = 0
            q.remove(q[n])
-           #vals = []
-           #for i in range(len(q)):
-            #   vals.append(q[i][1])
-           #maximum = sortMax(q)
-           #q.remove(maximum)
-           #for i in range(len(q):
-        #       if(q[n][1]>=q[i][1]):
-
-         #  for i in range(len(q)):
-        #       for j in range(len(q)-1):
-        #           if((j+1)==i)
-        #           if(q[i][1]>=q[j+1][1])
-
 
     time.sleep(1)
     return q
@@ -417,7 +401,6 @@ def General_Search(graph, searchMethod):
             adj = g.getNode(pop[0]).getAdjacent()
         else:
             adj = g.getNode(pop[0][0]).getAdjacent()
-        #print(adj)
 
         #Update queue according to the search method
         if(searchMethod == 'DFS'):
