@@ -562,8 +562,8 @@ def removeInconsistentValue(graph, arc, assignment):
 
 		if not satisfied:
 			removedAssignments.append([arc[1], possibleValue2])
-			print "---because the only possible value(s) for {0} are {1}, then {2} can not have the value {3}".format(
-															arc[0].name, domain1, arc[1].name, possibleValue2.name)
+			print("---because the only possible value(s) for {0} are {1}, then {2} can not have the value {3}".format(
+															arc[0].name, domain1, arc[1].name, possibleValue2.name))
 			removed = True
 	for [variable, removedVal] in removedAssignments:
 		domain2.remove(removedVal)
@@ -616,25 +616,25 @@ def printVarValList(varValList):
 	string = "-"
 	for varVal in varValList:
 		string += "{0} ".format(varVal[0].name)
-	print string
+	print(string)
 
 def recursiveBacktracking(assignment, graph):
 	if len(assignment) == len(graph.variables):
 		return assignment
 
 	variablesInOrder = graph.selectVariable(assignment)
-	print "\nVariables are ordered like this:"
+	print("\nVariables are ordered like this:")
 	printVarValList(variablesInOrder)
 	for [var, numRemainVal, numConstr] in variablesInOrder:
-		print "\n-Variable selected: {0}".format(var)
+		print("\n-Variable selected: {0}".format(var))
 		#print "possible assignments: {0}".format(graph.possibleAssignments)
 		valuesInOrder = graph.selectValue(var, assignment)
-		print "-Values are ordered like this:"
+		print("-Values are ordered like this:")
 		printVarValList(valuesInOrder)
 		for [val, minRemVal] in valuesInOrder:
-			print "--test with value {0}".format(val)
+			print("--test with value {0}".format(val))
 			if graph.consistentAssignment(var, val, assignment):
-				print "---{0} assigned {1} is consistent, test the children".format(var, val)
+				print("---{0} assigned {1} is consistent, test the children".format(var, val))
 				assignment.append([var, val])
 				removedAssignments = constraintPropagation(graph, var, assignment)
 				result = recursiveBacktracking(assignment, graph)
@@ -645,16 +645,13 @@ def recursiveBacktracking(assignment, graph):
 						if variableRemoved == possibleAssign[0]:
 							possibleAssign[1].append(valueRemoved)
 				assignment.remove([var, val])
-				print "\n---no solution with {0} assigned to {1}".format(var, val)
-			print "--{0} assigned {1} is not consistent, test next variable".format(var, val)
+				print("\n---no solution with {0} assigned to {1}".format(var, val))
+			print("--{0} assigned {1} is not consistent, test next variable".format(var, val))
 		return False
-
-
-
 
 def main():
 	if len(sys.argv) != 2 and len(sys.argv) != 3:
-		print "Usage: python CSP.py {input file} [optimization input file 2]"
+		print("Usage: python CSP.py {input file} [optimization input file 2]")
 		return
 
 	try:
@@ -678,7 +675,7 @@ def main():
 		else:
 			input_list[-1].append(line)
 
-	print input_list
+	print(input_list)
 
 	graph = Graph(input_list[0], input_list[1], input_list[2], input_list[3], input_list[4], input_list[5],
 					input_list[6], input_list[7])
@@ -694,7 +691,7 @@ def main():
 
 		linesOptimizationFile = []
 		for line in f2.readlines():
-			print line
+			print(line)
 			linesOptimizationFile.append([line.split(" ")[1][:-1]])
 
 		f2.close()
@@ -704,16 +701,16 @@ def main():
 
 	solution =  backtrackingSearch(graph)
 	if solution:
-		print "\n\nThe algorithm found a solution:\n"
+		print("\n\nThe algorithm found a solution:\n")
 		lengthPerValue = [0]*len(graph.values)
 		for assignment in solution:
-			print "Variable {0}, length {2} assigned value is {1}".format(assignment[0].name,
-																			assignment[1].name, assignment[0].args)
+			print("Variable {0}, length {2} assigned value is {1}".format(assignment[0].name,
+																			assignment[1].name, assignment[0].args))
 			lengthPerValue[graph.values.index(assignment[1])] += int(assignment[0].args)
 		for valueIndex, value in enumerate(graph.values):
-			print "Length of task assigned to processor {0} is {1}".format(value.name, lengthPerValue[valueIndex])
+			print("Length of task assigned to processor {0} is {1}".format(value.name, lengthPerValue[valueIndex]))
 	else:
-		print "No solution found"
+		print("No solution found")
 
 
 if __name__ == '__main__':
