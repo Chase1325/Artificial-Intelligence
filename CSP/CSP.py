@@ -473,7 +473,7 @@ class Graph:
 					for assign in assignment:
 						if assign[1] == value:
 							length += int(assign[0].args) 						#TODO change if there is no deadline constraint!!
-					if not int(const.values[0]) > length + int(variable.args):
+					if not int(const.values[0]) >= length + int(variable.args):
 						#print "Non consistency", variable, value, assignment, const
 						return False
 				elif const.type < 20:
