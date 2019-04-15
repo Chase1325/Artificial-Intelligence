@@ -179,7 +179,6 @@ def UCS(g, q, adj, pop):
         item = []
         item.append(node)
         item.extend(pop[0])
-        #print(item)
         paths.append([item, pathcost + g.getNode(pop[0][0]).getEdgeWeight(node)])
 
     #Perform insertion sort on queue with the paths
@@ -200,7 +199,7 @@ def GS(g, q, adj, pop):
         else:
             openedList.append(key)
 
-    #Need to find new paths with cost then append/insert at correct indexself.
+    #Need to find new paths with cost then append/insert at correct index.
     for node in openedList:
         item = []
         item.append(node)
